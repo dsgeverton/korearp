@@ -11,6 +11,7 @@ function App() {
   const [isPartner, setIsPartner] = useState(false)
   const [alert, setAlert] = useState(false)
   const [hasLogged, setHasLogged] = useState(false)
+  const [loginStatusInvalid, setLoginStatusInvalid] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
 
   const admin = {
@@ -41,8 +42,10 @@ function App() {
       console.log("logado")
       setShowLoginForm(false)
       setHasLogged(true)
+      setLoginStatusInvalid(false)
     } else {
       console.log("usuário ou senha inválido")
+      setLoginStatusInvalid(true)
     }
   }
 
@@ -52,6 +55,7 @@ function App() {
     setHasLogged(false)
     setInputMoney("")
     setIsPartner(false)
+    setLoginStatusInvalid(false)
   }
 
   return (
@@ -165,7 +169,7 @@ function App() {
       }
       {
         showLoginForm && (
-          <Login showLogin={setShowLoginForm} handleLogin={handleLogin} />
+          <Login showLogin={setShowLoginForm} handleLogin={handleLogin} loginStatusInvalid={loginStatusInvalid} setLoginStatusInvalid={setLoginStatusInvalid} />
         )
       }
       <footer className='mt-8 px-4 py-8 bg-black text-white absolute text-center bottom-0 w-full'>
