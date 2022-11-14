@@ -110,7 +110,7 @@ function App() {
           (
             <Fragment>
               <section id='simulador' className="flex flex-col bg-white py-16 min-h-[400px] relative justify-center items-center gap-4">
-                <h1 className="text-xl text-white bg-gray-300 flex w-full justify-center items-center p-2 absolute top-0">SIMULADOR - PINTURA</h1>
+                <h1 className="text-xl text-gray-900 bg-gray-300 flex w-full justify-center items-center p-2 absolute top-0">SIMULADOR - PINTURA</h1>
                 <article className="flex justify-center">
                   <div className="flex flex-col gap-1">
                     <div className="flex flex-col">
