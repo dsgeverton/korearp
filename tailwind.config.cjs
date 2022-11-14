@@ -8,6 +8,9 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: 'Sono, sans-serif',
+      },
+      animation: {
+        'spin': 'spin 8s linear infinite'
       }
     },
   },

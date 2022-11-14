@@ -62,7 +62,7 @@ function App() {
             src="https://storage.hydrus.gg/production/static/anF1yWDmYgwnSxD9WmYTKXjq4gkgVMUu1WzdFrVX.gif"
             alt="KOREIA" />
 
-          <img className="w-[128px] -ml-6" src="https://cdn-icons-png.flaticon.com/512/3909/3909425.png" alt="KOREIA" />
+          <img className="w-[128px] -ml-6 animate-spin" src="https://cdn-icons-png.flaticon.com/512/3909/3909425.png" alt="KOREIA" />
 
         </figure>
         <h1 className="text-[48px] font-bold text-white">FAMÍLIA KOREA - FLOW ROLEPLAY</h1>
@@ -159,7 +159,7 @@ function App() {
           ) :
           (
             <div className='flex justify-center items-center w-full h-auto p-2'>
-              <h1 className='text-white'>faça o login para exibir o conteúdo</h1>
+              <h1 className='text-white uppercase'>faça o login para exibir o conteúdo</h1>
             </div>
           )
       }
