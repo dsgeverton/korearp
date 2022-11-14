@@ -50,6 +50,8 @@ function App() {
     setAlert(false)
     setShowLoginForm(false)
     setHasLogged(false)
+    setInputMoney("")
+    setIsPartner(false)
   }
 
   return (
