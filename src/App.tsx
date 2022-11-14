@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { faSackDollar } from "@fortawesome/free-solid-svg-icons";
+import { faSackDollar, faCarSide, faHandHoldingDollar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function App() {
@@ -45,10 +45,13 @@ function App() {
         <menu>
           <ul className='text-white flex gap-2'>
             <li className='uppercase border border-white px-4 py-2 cursor-pointer hover:bg-white hover:text-black hover:border-black transition-colors duration-300'>
-              <a href="#simulador">simulador</a>
+              <a href="#simulador" className='flex gap-2 justify-center items-center'>
+                <FontAwesomeIcon icon={faCarSide} />
+                simulador
+              </a>
             </li>
             <li className='uppercase border border-white px-4 py-2 cursor-pointer hover:bg-white hover:text-black hover:border-black transition-colors duration-300'>
-              <a href="#tabela-precos">tebela de preços</a>
+              <a href="#tabela-precos" className='flex gap-2 justify-center items-center'><FontAwesomeIcon icon={faHandHoldingDollar} />tebela de preços</a>
             </li>
           </ul>
         </menu>
