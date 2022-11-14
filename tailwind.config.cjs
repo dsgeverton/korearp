@@ -5,7 +5,11 @@ module.exports = {
     "./src/*.tsx"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: 'Sono, sans-serif',
+      }
+    },
   },
   plugins: [require("tailwindcss-animation-delay")],
 }
