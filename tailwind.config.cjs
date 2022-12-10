@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'wallpaper': "url('./src/assets/imgs/wall.jpg')"
+      },
       fontFamily: {
         sans: 'Sono, sans-serif',
       },

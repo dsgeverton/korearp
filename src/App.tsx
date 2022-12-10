@@ -1,8 +1,26 @@
 import { Fragment, useEffect, useState } from 'react'
 
-import { faSackDollar, faCarSide, faHandHoldingDollar, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import { faSackDollar, faUser, faUserTie, faCarSide, faHandHoldingDollar, faRightToBracket, faScrewdriverWrench } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Login } from './components/Login';
+import { api } from './services/api';
+import { AxiosResponse, ResponseType } from 'axios';
+import { User } from './types/user';
+import { Header } from './components/Header';
+import * as AuthService from './services/AuthService';
+
+const useLocalStorage = (storageKey: string, stateData: any) => {
+
+  const [value, setValue] = useState(
+    localStorage.getItem(storageKey) ? JSON.parse(localStorage.getItem(storageKey) || "") : stateData
+  )
+
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(value))
+  }, [value, setValue])
+
+  return [value, setValue]
+}
 
 function App() {
   const PARTNER_VALUE = 30
@@ -11,13 +29,10 @@ function App() {
   const [isPartner, setIsPartner] = useState(false)
   const [alert, setAlert] = useState(false)
   const [hasLogged, setHasLogged] = useState(false)
+  const [user, setUser] = useLocalStorage('user', "")
+  const [token, setToken] = useLocalStorage('token', "")
   const [loginStatusInvalid, setLoginStatusInvalid] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
-
-  const admin = {
-    username: "admin",
-    password: "admin"
-  }
 
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -25,10 +40,12 @@ function App() {
   })
 
   useEffect(() => {
-    console.log(inputMoney)
+    user && setHasLogged(true)
+  }, [])
+
+  useEffect(() => {
     if (inputMoney == '' || inputMoney == null || inputMoney == undefined) setAlert(false)
     else {
-
       if (!(inputMoney.match('^[0-9]*$'))) {
         setAlert(true)
       } else {
@@ -37,19 +54,23 @@ function App() {
     }
   }, [inputMoney])
 
-  async function handleLogin(username:string, passwd:string) {
-    if (username === admin.username && passwd === admin.password) {
-      console.log("logado")
+  async function handleLogin(username: string, passwd: string) {
+    const response = await AuthService.login(username, passwd)
+    if (response) {
+      const user: User = response
+      setUser(user)
+      // setToken(response.token)
       setShowLoginForm(false)
       setHasLogged(true)
       setLoginStatusInvalid(false)
-    } else {
-      console.log("usuário ou senha inválido")
-      setLoginStatusInvalid(true)
+      return response
     }
   }
 
   async function handleLogoff() {
+    AuthService.logoff()
+    setToken("")
+    setUser("")
     setAlert(false)
     setShowLoginForm(false)
     setHasLogged(false)
@@ -59,18 +80,8 @@ function App() {
   }
 
   return (
-    <div className="App bg-gray-800 min-h-screen relative">
-      <header className="flex h-[160px] py-4 px-2 justify-center items-center">
-        <figure className="absolute flex left-4">
-          <img className="w-[128px] rounded-full"
-            src="https://storage.hydrus.gg/production/static/anF1yWDmYgwnSxD9WmYTKXjq4gkgVMUu1WzdFrVX.gif"
-            alt="KOREIA" />
-
-          <img className="w-[128px] -ml-6 animate-spin" src="https://cdn-icons-png.flaticon.com/512/3909/3909425.png" alt="KOREIA" />
-
-        </figure>
-        <h1 className="text-[48px] font-bold text-white">FAMÍLIA KOREA - FLOW ROLEPLAY</h1>
-      </header>
+    <div className="App bg-wallpaper bg-no-repeat bg-cover bg-fixed min-h-screen relative">
+      <Header />
       <nav className="w-full bg-gray-900 p-4 flex justify-end items-center">
         <menu>
           <ul className='text-white flex gap-2'>
@@ -86,16 +97,41 @@ function App() {
                   <li className='uppercase border border-white px-4 py-2 cursor-pointer hover:bg-white hover:text-black hover:border-black transition-colors duration-300'>
                     <a href="#tabela-precos" className='flex gap-2 justify-center items-center'><FontAwesomeIcon icon={faHandHoldingDollar} />tebela de preços</a>
                   </li>
+                  {
+                    user && user.role.includes("ADMIN") ?
+                      <li className='uppercase border border-white px-4 py-2 cursor-pointer hover:bg-white hover:text-black hover:border-black transition-colors duration-300'>
+                        <a href='/painel' className='flex gap-2 justify-center items-center'>
+                          <FontAwesomeIcon icon={faScrewdriverWrench} />
+                          PAINEL ADMIN
+                        </a>
+                      </li>
+                      :
+                      null
+                  }
                   <li className='uppercase border border-white px-4 py-2 cursor-pointer hover:bg-white hover:text-black hover:border-black transition-colors duration-300'>
-                  <a onClick={() => {handleLogoff()}} className='flex gap-2 justify-center items-center'>
-                    <FontAwesomeIcon icon={faRightToBracket} />
-                    sair
-                  </a>
-                </li>
+                    <a onClick={() => { handleLogoff() }} className='flex gap-2 justify-center items-center'>
+                      <FontAwesomeIcon icon={faRightToBracket} />
+                      sair
+                    </a>
+                  </li>
+                  {
+                    user ?
+                      <li className='uppercase rounded-full border border-white px-4 py-2 cursor-pointer hover:bg-green-400 hover:text-black hover:border-black transition-colors duration-300'>
+                        <a className='flex gap-2 justify-center items-center'>
+                          {
+                            user.role.includes("ADMIN") ?
+                              <FontAwesomeIcon icon={faUserTie} />
+                              :
+                              <FontAwesomeIcon icon={faUser} />
+                          }
+                          {user.name}</a>
+                      </li> :
+                      null
+                  }
                 </Fragment>
               ) :
-                <li className='uppercase border border-white px-4 py-2 cursor-pointer hover:bg-white hover:text-black hover:border-black transition-colors duration-300'>
-                  <a onClick={() => {setShowLoginForm(true)}} className='flex gap-2 justify-center items-center'>
+                <li onClick={() => { setShowLoginForm(true) }} className={`disabled:${showLoginForm} uppercase border border-white px-4 py-2 cursor-pointer hover:bg-white hover:text-black hover:border-black transition-colors duration-300`}>
+                  <a className='flex gap-2 justify-center items-center'>
                     <FontAwesomeIcon icon={faRightToBracket} />
                     Login
                   </a>
